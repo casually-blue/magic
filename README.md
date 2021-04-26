@@ -1,1 +1,1 @@
-= Magic the gathering app
+# Magic the gathering app
