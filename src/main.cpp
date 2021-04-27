@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include<stdlib.h>
 
 #include<imgui.h>
 #include<imgui_impl_glfw.h>
@@ -7,34 +8,36 @@
 #include<GL/glew.h>
 #include<GLFW/glfw3.h>
 
+void err_exit(int condition){
+	if(condition) exit(1);
+}
+
 const char* glsl_version = "#version 330";
 
 static void glfw_error_callback(int error, const char* description){
 	fprintf(stderr, "GLFW Error: %d: %s\n", error, description);
 }
 
+void setup_glfw(){
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+}
+
 int main(int argc, char** argv){
 	glfwSetErrorCallback(glfw_error_callback);
 
-	if(!glfwInit())
-		return 1;
+	err_exit(!glfwInit());
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	setup_glfw();
 
 	GLFWwindow* win = glfwCreateWindow(1024, 768, "Imgui Test", NULL, NULL);
-	if (win == NULL)
-		return 1;
+
+	err_exit(win == NULL);
 
 	glfwMakeContextCurrent(win);
 	glfwSwapInterval(1);
 
-	if(glewInit() != GLEW_OK){
-		fprintf(stderr, "Failed to initialize GLEW\n");
-		return 1;
-	}
+	err_exit(glewInit() != GLEW_OK);
 
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
